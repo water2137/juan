@@ -109,10 +109,19 @@ print_string:
 hex_to_bin:
     cmp al, '9'
     jbe .is_digit
-    sub al, 'A' - 10
+    cmp al, 'F'
+		jbe .is_upper
+		cmp al, 'f'
+		jbe .is_lower
     jmp .done
 .is_digit:
     sub al, '0'
+		jmp .done
+.is_upper:
+	sub al, 'A' - 10
+	jmp .done
+.is_lower:
+	sub al, 'a' - 10
 .done:
     ret
 
@@ -120,10 +129,9 @@ welcome_msg: db 'juan v0.1', 0x0d, 0x0a, 0
 prompt:      db 0x0d, 0x0a, '> ', 0
 newline:     db 0x0d, 0x0a, 0
 ; exec_msg:    db 'juanning', 0x0d, 0x0a, 0
+
+user_buffer: resb 128
+code_buffer: resb 128
 times 510 - ($ - $$) db 0
-
-user_buffer:
-
-code_buffer:
-
 dw 0xaa55
+
